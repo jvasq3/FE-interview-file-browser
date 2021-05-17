@@ -8,10 +8,9 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from '@material-ui/core/styles';
 
-
 //Local Components
-import FileTable from './table/index';
-
+import FileTable from './components/table/index';
+import RangeInput from './components/RangeInput';
 import { useListEntriesQuery } from "./generated-api";
 
 const useStyles = makeStyles({
@@ -111,6 +110,11 @@ function DataGrid() {
     if(type === 'lt') setSizeLt(INIT_LT_VALUE)
   }
 
+  const handleRangeChange = (value: number, type: string) => {
+    if(type === 'gt') setSizeGt(value)
+    if(type === 'lt') setSizeLt(value)
+  }
+
   const _getTableCallbacks = () => {
     return {
       setPage,
@@ -127,50 +131,13 @@ function DataGrid() {
           <Toolbar>
             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
               <Typography variant="h6">File Browser</Typography>
-              <Box>
-                <Chip 
-                  color="primary" 
-                  onDelete={() => handleDelete('gt')} 
-                  label={
-                    <Box>
-                      <strong>File Size &gt;</strong>
-                      <input 
-                        onChange={(e) => setSizeGt(Number(e.currentTarget.value))} 
-                        type="number"
-                        value={sizeGt}
-                        style={{
-                          marginLeft: 8,
-                          background: 'transparent',
-                          color: 'white',
-                          border: 'none',
-                          width: 80,
-                        }}
-                      />
-                    </Box>
-                  }
-                />
-                <Chip 
-                  color="primary" 
-                  onDelete={() => handleDelete('lt')} 
-                  label={
-                    <Box>
-                      <strong>File Size &lt;</strong>
-                      <input 
-                        onChange={(e) => setSizeLt(Number(e.currentTarget.value))} 
-                        type="number"
-                        value={sizeLt}
-                        style={{
-                          marginLeft: 8,
-                          background: 'transparent',
-                          color: 'white',
-                          border: 'none',
-                          width: 80,
-                        }}
-                      />
-                    </Box>
-                  }
-                />
-              </Box>
+              <RangeInput
+                label="File Size"
+                onDelete={handleDelete}
+                sizeGt={sizeGt}
+                sizeLt={sizeLt}
+                onChange={handleRangeChange}
+              />
             </Box>
           </Toolbar>
           <FileTable
